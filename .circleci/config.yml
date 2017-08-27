@@ -6,8 +6,5 @@ jobs:
     docker:
       - image: scorpil/rust:1.18
     steps:
-      - cargo run --bin sonos_discover
-test:
-  override:
-    # don't forget to replace "1.18" with your rust version
-    - docker run -it --rm -v $(pwd):/source -w /source scorpil/rust:1.18 cargo run --bin sonos_discover
+      - checkout
+      - run: cargo run --bin sonos_discover
