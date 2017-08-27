@@ -1,10 +1,12 @@
-version: 2.0
+version: 2
 
-
-machine:
-  services:
-    - docker
-
+jobs:
+  build:
+    working-directory: ~/sonos_discovery
+    docker:
+      - image: scorpil/rust:1.18
+    steps:
+      - cargo run --bin sonos_discover
 test:
   override:
     # don't forget to replace "1.18" with your rust version
