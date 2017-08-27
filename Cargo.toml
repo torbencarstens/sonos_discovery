@@ -1,0 +1,7 @@
+[package]
+name = "sonos_discover"
+version = "0.1.0"
+authors = ["chabare <chabare95@gmail.com>"]
+
+[dependencies]
+socket = "*"
