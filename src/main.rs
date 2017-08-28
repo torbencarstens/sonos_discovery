@@ -14,6 +14,7 @@ fn main() {
     println!("{:?}", discovery);
 }
 
+#[derive(Debug)]
 pub struct Discover {
     multicast: SocketAddr,
     socket: Arc<Socket>
