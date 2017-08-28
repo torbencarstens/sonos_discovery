@@ -2,14 +2,14 @@ extern crate socket;
 
 use socket::{AF_INET, Socket, SOCK_DGRAM, IP_MULTICAST_TTL, IPPROTO_IP};
 use std::collections::HashSet;
-use std::net::SocketAddr;
+use std::net::{IpAddr, SocketAddr};
 use std::str::FromStr;
 use std::sync::{Arc, mpsc};
 use std::thread;
 use std::time::Instant;
 
 fn main() {
-    Discover::new().start(None, Some(4))
+    println!("{:?}", Discover::new().start(None, Some(4)));
 }
 
 pub struct Discover {
@@ -91,12 +91,12 @@ ST: urn:schemas-upnp-org:device:ZonePlayer:1"#.as_bytes();
     }
 }
 
-/*impl Drop for Discover {
+impl Drop for Discover {
     fn drop(&mut self) {
         // Socket closes on drop automatically, better safe than sorry
         let _ = self.socket.close();
     }
-}*/
+}
 
 impl Default for Discover {
     fn default() -> Self {
