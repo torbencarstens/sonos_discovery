@@ -1,18 +1,21 @@
 extern crate socket;
 
 use socket::{AF_INET, Socket, SOCK_DGRAM, IP_MULTICAST_TTL, IPPROTO_IP};
+use std::collections::HashSet;
 use std::net::SocketAddr;
 use std::str::FromStr;
+use std::sync::{Arc, mpsc};
+use std::thread;
 use std::time::Instant;
 
 fn main() {
-    Discover::new().start(None, Some(3))
+    Discover::new().start(None, Some(4))
 }
 
 struct Discover {
     pub devices: Vec<String>,
     multicast: SocketAddr,
-    socket: Socket
+    socket: Arc<Socket>
 }
 
 impl Discover {
@@ -24,11 +27,11 @@ impl Discover {
         }
     }
 
-    fn create_socket() -> Socket {
+    fn create_socket() -> Arc<Socket> {
         let socket = Socket::new(AF_INET, SOCK_DGRAM, 0).unwrap();
         let _ = socket.setsockopt(IPPROTO_IP, IP_MULTICAST_TTL, 4);
 
-        socket
+        Arc::new(socket)
     }
 
     fn send_search(&self) {
@@ -40,29 +43,62 @@ ST: urn:schemas-upnp-org:device:ZonePlayer:1"#.as_bytes();
         let _ = self.socket.sendto(player_search, 0, &self.multicast);
     }
 
-    pub fn start(self, timeout: Option<u32>, device_count: Option<u32>) {
+    pub fn start(self, timeout: Option<u32>, device_count: Option<usize>) {
         let timeout = match timeout {
             Some(value) => { value }
             None => 5
         };
         let device_count = match device_count {
             Some(value) => { value }
-            None => std::u32::MAX
+            None => std::u32::MAX as usize
         };
 
-        self.send_search();
-        let mut count = 0;
         let time = Instant::now();
 
-        while time.elapsed().as_secs() < timeout as u64 && count < device_count {
-            let (_addr, data) = self.socket.recvfrom(1024, 0).unwrap();
+        self.send_search();
+        let mut devices = HashSet::new();
+        let socket = self.socket.clone();
+        while time.elapsed().as_secs() < timeout as u64 && devices.len() < device_count {
+            let socket = socket.clone();
+            let (sender, receiver) = mpsc::channel();
+            let _ = thread::spawn(move ||
+                {
+                    match socket.recvfrom(1024, 0) {
+                        Ok((__addr, _data)) => {
+                            let _ = sender.send((__addr, _data));
+                        }
+                        Err(_) => {}
+                    }
+                }
+            );
+
+            let (_addr, data) = match receiver.recv_timeout(std::time::Duration::new(0, 500000000)) {
+                Ok((_addr, data)) => (_addr, data),
+                Err(_) => continue
+            };
+            if devices.contains(&_addr.ip()) || data.is_empty() {
+                println!("{:?}", &_addr.ip());
+                continue
+            }
+
             let data = String::from_utf8_lossy(&data);
             if data.contains("Sonos") {
-                println!("{}", data);
-                count += 1;
+                devices.insert(_addr.ip());
             }
         }
+        println!("{:#?}", devices.len());
+    }
+}
 
+/*impl Drop for Discover {
+    fn drop(&mut self) {
+        // Socket closes on drop automatically, better safe than sorry
         let _ = self.socket.close();
+    }
+}*/
+
+impl Default for Discover {
+    fn default() -> Self {
+        Discover::new()
     }
 }
