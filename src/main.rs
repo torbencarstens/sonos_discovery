@@ -43,7 +43,7 @@ ST: urn:schemas-upnp-org:device:ZonePlayer:1"#.as_bytes();
         let _ = self.socket.sendto(player_search, 0, &self.multicast);
     }
 
-    pub fn start(self, timeout: Option<u32>, device_count: Option<usize>) {
+    pub fn start(self, timeout: Option<u32>, device_count: Option<usize>) -> HashSet<IpAddr> {
         let timeout = match timeout {
             Some(value) => { value }
             None => 5
@@ -86,7 +86,8 @@ ST: urn:schemas-upnp-org:device:ZonePlayer:1"#.as_bytes();
                 devices.insert(_addr.ip());
             }
         }
-        println!("{:#?}", devices.len());
+
+        devices
     }
 }
 
