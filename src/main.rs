@@ -15,7 +15,6 @@ fn main() {
 }
 
 pub struct Discover {
-    pub devices: Vec<String>,
     multicast: SocketAddr,
     socket: Arc<Socket>
 }
@@ -23,7 +22,6 @@ pub struct Discover {
 impl Discover {
     pub fn new() -> Self {
         Discover {
-            devices: Vec::new(),
             multicast: SocketAddr::from_str("239.255.255.250:1900").unwrap(),
             socket: Discover::create_socket()
         }
@@ -58,8 +56,8 @@ ST: urn:schemas-upnp-org:device:ZonePlayer:1"#.as_bytes();
         let time = Instant::now();
 
         self.send_search();
-        let mut devices = HashSet::new();
         let socket = self.socket.clone();
+        let mut devices: HashSet<IpAddr> = HashSet::new();
         while time.elapsed().as_secs() < timeout as u64 && devices.len() < device_count {
             let socket = socket.clone();
             let (sender, receiver) = mpsc::channel();
