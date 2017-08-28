@@ -9,7 +9,9 @@ use std::thread;
 use std::time::Instant;
 
 fn main() {
-    println!("{:?}", Discover::new().start(None, Some(4)));
+    let discovery = Discover::new();
+    discovery.start(None, Some(4));
+    println!("{:?}", discovery);
 }
 
 pub struct Discover {
