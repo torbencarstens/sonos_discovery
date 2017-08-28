@@ -12,7 +12,7 @@ fn main() {
     Discover::new().start(None, Some(4))
 }
 
-struct Discover {
+pub struct Discover {
     pub devices: Vec<String>,
     multicast: SocketAddr,
     socket: Arc<Socket>
