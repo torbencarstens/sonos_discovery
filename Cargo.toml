@@ -1,5 +1,5 @@
 [package]
-name = "sonos_discover"
+name = "sonos_discovery"
 version = "0.0.1"
 authors = ["Chabare <chabare95@gmail.com>"]
 
