@@ -16,14 +16,14 @@ fn main() {
 
 #[derive(Debug)]
 pub struct Discover {
-    multicast: SocketAddr,
+    multicast_addr: SocketAddr,
     socket: Arc<Socket>
 }
 
 impl Discover {
     pub fn new() -> Self {
         Discover {
-            multicast: SocketAddr::from_str("239.255.255.250:1900").unwrap(),
+            multicast_addr: SocketAddr::from_str("239.255.255.250:1900").unwrap(),
             socket: Discover::create_socket()
         }
     }
@@ -41,7 +41,7 @@ HOST: 239.255.255.250:1900
 MAN: "ssdp:discover"
 MX: 1
 ST: urn:schemas-upnp-org:device:ZonePlayer:1"#.as_bytes();
-        let _ = self.socket.sendto(player_search, 0, &self.multicast);
+        let _ = self.socket.sendto(player_search, 0, &self.multicast_addr);
     }
 
     pub fn start(&self, timeout: Option<u32>, device_count: Option<usize>) -> HashSet<IpAddr> {
