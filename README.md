@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/Chabare/sonos_discovery.svg?style=svg)](https://circleci.com/gh/Chabare/sonos_discovery)
+
 # Sonos discovery
 Library in rust to discover sonos devices via ssdp (UPnP discovery)
 
