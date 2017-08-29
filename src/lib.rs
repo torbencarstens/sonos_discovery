@@ -64,11 +64,11 @@ impl Discover {
         Discover::create_socket(socket_family, socket_level, protocol, &socket_options)
     }
 
-    fn create_socket<T: Clone>(socket_family: i32, socket_type: i32, protocol: i32, socket_options: &Vec<(i32, i32, T)>) -> Result<Arc<Socket>> {
+    fn create_socket(socket_family: i32, socket_type: i32, protocol: i32, socket_options: &Vec<(i32, i32, i32)>) -> Result<Arc<Socket>> {
         let socket = Socket::new(socket_family, socket_type, protocol)?;
         for socket_option in socket_options {
             // TODO: Use result, allow to fail, panic or return a result?
-            let _ = socket.setsockopt(socket_option.0, socket_option.1, socket_option.2.clone());
+            let _ = socket.setsockopt(socket_option.0, socket_option.1, socket_option.2);
         }
 
         Ok(Arc::new(socket))
