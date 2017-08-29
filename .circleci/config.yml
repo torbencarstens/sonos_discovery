@@ -7,4 +7,6 @@ jobs:
       - image: liuchong/rustup:nightly
     steps:
       - checkout
+      - run: rustup update nightly
+      - run: rustup show
       - run: rustup run nightly cargo run --bin sonos_discovery
