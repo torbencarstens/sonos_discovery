@@ -7,4 +7,4 @@ jobs:
       - image: scorpil/rust:1.18
     steps:
       - checkout
-      - run: cargo run --bin sonos_discover
+      - run: rustup run nightly cargo run --bin sonos_discovery
