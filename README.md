@@ -1,7 +1,16 @@
 # Sonos discovery
 Library in rust to discover sonos devices via ssdp (UPnP discovery)
 
+# Disclaimer
+Only works on unix systems at the moment.
+
+Windows support is planned for later versions.
+
+## Reason
+`socket` only works on linux.
+
 # Usage
+Unix systems only
 
 ##### Cargo.toml
 ```toml
@@ -27,3 +36,8 @@ fn main() {
     }
 }
 ```
+
+# TODO
+### Add crossplatform support (Windows)
+- Swap `socket` with a crossplatform library
+- Implement socket with the windows-api and make a simple crossplatform library
