@@ -4,7 +4,7 @@ jobs:
   build:
     working-directory: ~/sonos_discovery
     docker:
-      - image: scorpil/rust:1.18
+      - image: liuchong/rustup:nightly
     steps:
       - checkout
       - run: rustup run nightly cargo run --bin sonos_discovery
