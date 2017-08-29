@@ -16,33 +16,21 @@ jobs:
       - run:
           name: Run bin on nightly
           command: "rustup run nightly cargo build --bin sonos_discovery"
-  build-nightly:
-      working-directory: ~/sonos_discovery
-      docker:
-        - image: liuchong/rustup:beta
-      steps:
-        - checkout
-        - run:
-            name: Update beta version
-            command: "rustup update beta"
-        - run:
-            name: Show version
-            command: "rustup show"
-        - run:
-            name: Run bin on beta
-            command: "rustup run beta cargo build --bin sonos_discovery"
-  build-nightly:
-      working-directory: ~/sonos_discovery
-      docker:
-        - image: liuchong/rustup:stable
-      steps:
-        - checkout
-        - run:
-            name: Update stable version
-            command: "rustup stable nightly"
-        - run:
-            name: Show version
-            command: "rustup show"
-        - run:
-            name: Run bin on stable
-            command: "rustup run stable cargo build --bin sonos_discovery"
+      - run:
+          name: Update beta version
+          command: "rustup update beta"
+      - run:
+          name: Show version
+          command: "rustup show"
+      - run:
+          name: Run bin on beta
+          command: "rustup run beta cargo build --bin sonos_discovery"
+      - run:
+          name: Update stable version
+          command: "rustup update stable"
+      - run:
+          name: Show version
+          command: "rustup show"
+      - run:
+          name: Run bin on stable
+          command: "rustup run stable cargo build --bin sonos_discovery"
