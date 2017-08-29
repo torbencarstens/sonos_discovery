@@ -14,7 +14,7 @@ jobs:
           name: Show version
           command: "rustup show"
       - run:
-          name: Run bin on nightly
+          name: Build bin on nightly
           command: "rustup run nightly cargo build --bin sonos_discovery"
       - run:
           name: Update beta version
@@ -23,7 +23,7 @@ jobs:
           name: Show version
           command: "rustup show"
       - run:
-          name: Run bin on beta
+          name: Build bin on beta
           command: "rustup run beta cargo build --bin sonos_discovery"
       - run:
           name: Update stable version
@@ -32,5 +32,5 @@ jobs:
           name: Show version
           command: "rustup show"
       - run:
-          name: Run bin on stable
+          name: Build bin on stable
           command: "rustup run stable cargo build --bin sonos_discovery"
