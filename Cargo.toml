@@ -4,7 +4,7 @@ version = "0.0.1"
 authors = ["Chabare <chabare95@gmail.com>"]
 description = "Discover sonos devices via ssdp (UPnP discovery)"
 repository = "https://github.com/Chabare/sonos_discovery"
-license = "MIT License"
+license = "MIT"
 categories = ["sonos"]
 
 [lib]
