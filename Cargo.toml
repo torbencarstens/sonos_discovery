@@ -14,6 +14,7 @@ path = "src/lib.rs"
 [[bin]]
 name = "sonos_discovery"
 path = "src/main.rs"
+doc = false
 
 [dependencies]
 socket = "0.0.7"
