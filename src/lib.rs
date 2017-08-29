@@ -168,9 +168,3 @@ impl Drop for Discover {
         let _ = self.socket.close();
     }
 }
-
-impl Default for Discover {
-    fn default() -> Self {
-        Discover::new()
-    }
-}
