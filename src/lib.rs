@@ -2,7 +2,7 @@ extern crate socket;
 
 use socket::{AF_INET, Socket, SOCK_DGRAM, IP_MULTICAST_TTL, IPPROTO_IP};
 use std::collections::HashSet;
-use std::io::{ErrorKind, Result};
+use std::io::{Error, ErrorKind, Result};
 use std::net::{IpAddr, SocketAddr};
 use std::str::FromStr;
 use std::sync::{Arc, mpsc};
@@ -37,7 +37,7 @@ impl Discover {
     pub fn new() -> Result<Self> {
         let multicast_address = match SocketAddr::from_str("239.255.255.250:1900") {
             Ok(address) => address,
-            Err(_) => return ErrorKind::InvalidData
+            Err(_) => return Err(Error::new(ErrorKind::InvalidData, "Couldn't parse socket address"))
         };
 
         Discover::with_address(multicast_address)
