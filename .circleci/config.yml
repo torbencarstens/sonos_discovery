@@ -8,11 +8,11 @@ jobs:
     steps:
       - checkout
       - run:
-        name: Update nightly version
-        command: "rustup update nightly"
+          name: Update nightly version
+          command: "rustup update nightly"
       - run:
-        name: Show version
-        command: "rustup show"
+          name: Show version
+          command: "rustup show"
       - run:
-        name: Run bin
-        command: "rustup run nightly cargo run --bin sonos_discovery"
+          name: Run bin
+          command: "rustup run nightly cargo run --bin sonos_discovery"
