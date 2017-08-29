@@ -32,7 +32,7 @@ impl Discover {
     /// ```
     /// use sonos_discovery::Discovery;
     ///
-    /// let discovery: Discovery = Discovery::new();
+    /// let discovery: Discovery = Discovery::new().unwrap();
     /// ```
     pub fn new() -> Result<Self> {
         let multicast_address = match SocketAddr::from_str("239.255.255.250:1900") {
@@ -103,7 +103,7 @@ ST: urn:schemas-upnp-org:device:ZonePlayer:1"#.as_bytes();
     /// ```
     /// use sonos_discovery::Discovery;
     ///
-    /// let devices: HashSet<IpAddr> = Discovery::new().start(None, Some(3));
+    /// let devices: HashSet<IpAddr> = Discovery::new().unwrap().start(None, Some(3)).unwrap();
     /// ```
     pub fn start(&self, timeout: Option<u32>, device_count: Option<usize>) -> Result<HashSet<IpAddr>> {
         let timeout = match timeout {
