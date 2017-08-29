@@ -124,13 +124,16 @@ ST: urn:schemas-upnp-org:device:ZonePlayer:1"#.as_bytes();
         while time.elapsed().as_secs() < timeout as u64 && devices.len() < device_count {
             let socket = socket.clone();
             let (sender, receiver) = mpsc::channel();
-            let _ = thread::spawn(move ||
+            thread::spawn(move ||
                 {
                     // TODO: Add logging
                     match socket.recvfrom(1024, 0) {
                         Ok((__addr, _data)) => {
-                            let _ = sender.send((__addr, _data));
                             // TODO: Add logging, fail on multiple send errors?
+                            match sender.send((__addr, _data)) {
+                                Ok(_) => {}
+                                Err(_) => {}
+                            };
                         }
                         Err(_) => {}
                     }
