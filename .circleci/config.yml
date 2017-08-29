@@ -1,7 +1,7 @@
 version: 2
 
 jobs:
-  build-nightly:
+  build:
     working-directory: ~/sonos_discovery
     docker:
       - image: liuchong/rustup:nightly
