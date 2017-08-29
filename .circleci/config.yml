@@ -15,4 +15,4 @@ jobs:
           command: "rustup show"
       - run:
           name: Run bin
-          command: "rustup run nightly cargo run --bin sonos_discovery"
+          command: "rustup run nightly cargo build --bin sonos_discovery"
