@@ -4,7 +4,33 @@ jobs:
   build:
     working-directory: ~/sonos_discovery
     docker:
-      - image: scorpil/rust:1.18
+      - image: liuchong/rustup:nightly
     steps:
       - checkout
-      - run: cargo run --bin sonos_discover
+      - run:
+          name: Update nightly version
+          command: "rustup update nightly"
+      - run:
+          name: Show version
+          command: "rustup show"
+      - run:
+          name: Build bin on nightly
+          command: "rustup run nightly cargo build --bin sonos_discovery"
+      - run:
+          name: Update beta version
+          command: "rustup update beta"
+      - run:
+          name: Show version
+          command: "rustup show"
+      - run:
+          name: Build bin on beta
+          command: "rustup run beta cargo build --bin sonos_discovery"
+      - run:
+          name: Update stable version
+          command: "rustup update stable"
+      - run:
+          name: Show version
+          command: "rustup show"
+      - run:
+          name: Build bin on stable
+          command: "rustup run stable cargo build --bin sonos_discovery"
