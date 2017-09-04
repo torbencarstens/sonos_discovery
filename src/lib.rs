@@ -68,7 +68,7 @@ impl Discover {
         let socket = Socket::new(socket_family, socket_type, protocol)?;
         for socket_option in socket_options {
             // TODO: Use result, allow to fail, panic or return a result?
-            let _ = socket.setsockopt(socket_option.0, socket_option.1, socket_option.2);
+            socket.setsockopt(socket_option.0, socket_option.1, socket_option.2)?
         }
 
         Ok(Arc::new(socket))
