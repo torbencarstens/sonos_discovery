@@ -118,10 +118,9 @@ ST: urn:schemas-upnp-org:device:ZonePlayer:1"#.as_bytes();
 
         self.send_search()?;
         // There's probably a better way than a double clone
-        let socket = self.socket.clone();
         let mut devices: Vec<IpAddr> = Vec::new();
         while time.elapsed().as_secs() < timeout as u64 && devices.len() < device_count {
-            let socket = socket.clone();
+            let socket = self.socket.clone();
             let (sender, receiver) = mpsc::channel();
             thread::spawn(move ||
                 {
