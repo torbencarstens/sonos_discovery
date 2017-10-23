@@ -1,4 +1,4 @@
-categories = ["Added", "Changed", "Fixed", "Improved", "Removed"]
+categories = ["Add", "Update", "Fix", "Improve", "Remove"]
 category_delimiters = ["[", "]"]
 colored_output = true
 enable_debug = true
@@ -7,4 +7,4 @@ enable_footers = false
 show_commit_hash = false
 show_prefix = false
 sort_by = "date"
-template_prefix = "JIRA-1234"
+template_prefix = ""
