@@ -1,4 +1,4 @@
-categories = ["Add", "Update", "Fix", "Improve", "Remove"]
+categories = ["Add", "Update", "Fix", "Improve", "Remove", "Change"]
 category_delimiters = ["[", "]"]
 colored_output = true
 enable_debug = true
