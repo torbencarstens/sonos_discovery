@@ -1,0 +1,10 @@
+categories = ["Add", "Update", "Fix", "Improve", "Remove", "Change"]
+category_delimiters = ["[", "]"]
+colored_output = true
+enable_debug = true
+excluded_commit_tags = []
+enable_footers = false
+show_commit_hash = false
+show_prefix = false
+sort_by = "date"
+template_prefix = ""

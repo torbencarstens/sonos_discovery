@@ -1,7 +1,6 @@
 extern crate socket;
 
 use socket::{AF_INET, Socket, SOCK_DGRAM, IP_MULTICAST_TTL, IPPROTO_IP};
-use std::collections::HashSet;
 use std::io::{Error, ErrorKind, Result};
 use std::net::{IpAddr, SocketAddr};
 use std::str::FromStr;
@@ -103,9 +102,9 @@ ST: urn:schemas-upnp-org:device:ZonePlayer:1"#.as_bytes();
     /// ```
     /// use sonos_discovery::Discovery;
     ///
-    /// let devices: HashSet<IpAddr> = Discovery::new().unwrap().start(None, Some(3)).unwrap();
+    /// let devices: Vec<IpAddr> = Discovery::new().unwrap().start(None, Some(3)).unwrap();
     /// ```
-    pub fn start(&self, timeout: Option<u32>, device_count: Option<usize>) -> Result<HashSet<IpAddr>> {
+    pub fn start(&self, timeout: Option<u32>, device_count: Option<usize>) -> Result<Vec<IpAddr>> {
         let timeout = match timeout {
             Some(value) => { value }
             None => 5
@@ -118,11 +117,9 @@ ST: urn:schemas-upnp-org:device:ZonePlayer:1"#.as_bytes();
         let time = Instant::now();
 
         self.send_search()?;
-        // There's probably a better way than a double clone
-        let socket = self.socket.clone();
-        let mut devices: HashSet<IpAddr> = HashSet::new();
+        let mut devices: Vec<IpAddr> = Vec::new();
         while time.elapsed().as_secs() < timeout as u64 && devices.len() < device_count {
-            let socket = socket.clone();
+            let socket = Arc::clone(&self.socket);
             let (sender, receiver) = mpsc::channel();
             thread::spawn(move ||
                 {
@@ -155,7 +152,7 @@ ST: urn:schemas-upnp-org:device:ZonePlayer:1"#.as_bytes();
 
             let data = String::from_utf8_lossy(&data);
             if data.contains("Sonos") {
-                devices.insert(_addr.ip());
+                devices.push(_addr.ip())
             }
         }
 
