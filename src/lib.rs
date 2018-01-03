@@ -47,7 +47,7 @@ impl Discover {
         let socket = Discover::create_default_socket()?;
         Ok(Discover {
             multicast_addr: address,
-            socket: socket
+            socket
         })
     }
 
@@ -63,7 +63,7 @@ impl Discover {
         Discover::create_socket(socket_family, socket_level, protocol, &socket_options)
     }
 
-    fn create_socket(socket_family: i32, socket_type: i32, protocol: i32, socket_options: &Vec<(i32, i32, i32)>) -> Result<Arc<Socket>> {
+    fn create_socket(socket_family: i32, socket_type: i32, protocol: i32, socket_options: &[(i32, i32, i32)]) -> Result<Arc<Socket>> {
         let socket = Socket::new(socket_family, socket_type, protocol)?;
         for socket_option in socket_options {
             // TODO: Use result, allow to fail, panic or return a result?
@@ -84,11 +84,11 @@ impl Discover {
     /// MX: 1
     /// ST: urn:schemas-upnp-org:device:ZonePlayer:1```
     fn send_search(&self) -> Result<usize> {
-        let player_search = r#"M-SEARCH * HTTP/1.1
+        let player_search = br#"M-SEARCH * HTTP/1.1
 HOST: 239.255.255.250:1900
 MAN: "ssdp:discover"
 MX: 1
-ST: urn:schemas-upnp-org:device:ZonePlayer:1"#.as_bytes();
+ST: urn:schemas-upnp-org:device:ZonePlayer:1"#;
 
         self.socket.sendto(player_search, 0, &self.multicast_addr)
     }
@@ -118,27 +118,20 @@ ST: urn:schemas-upnp-org:device:ZonePlayer:1"#.as_bytes();
 
         self.send_search()?;
         let mut devices: Vec<IpAddr> = Vec::new();
-        while time.elapsed().as_secs() < timeout as u64 && devices.len() < device_count {
+        while time.elapsed().as_secs() < u64::from(timeout) && devices.len() < device_count {
             let socket = Arc::clone(&self.socket);
             let (sender, receiver) = mpsc::channel();
             thread::spawn(move ||
                 {
-                    // TODO: Add logging
-                    match socket.recvfrom(1024, 0) {
-                        Ok((__addr, _data)) => {
-                            // TODO: Add logging, fail on multiple send errors?
-                            match sender.send((__addr, _data)) {
-                                Ok(_) => {}
-                                Err(_) => {}
-                            };
-                        }
-                        Err(_) => {}
+                    if let Ok((__addr, _data)) = socket.recvfrom(1024, 0) {
+                        // TODO: Add logging, fail on multiple send errors?
+                        if sender.send((__addr, _data)).is_ok() {}
                     }
                 }
             );
 
             // TODO: Add logging, change
-            let (_addr, data) = match receiver.recv_timeout(std::time::Duration::new(0, 500000000)) {
+            let (_addr, data) = match receiver.recv_timeout(std::time::Duration::new(0, 500_000_000)) {
                 Ok((_addr, data)) => (_addr, data),
                 Err(_) => continue
             };
