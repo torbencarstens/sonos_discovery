@@ -105,14 +105,8 @@ ST: urn:schemas-upnp-org:device:ZonePlayer:1"#;
     /// let devices: Vec<IpAddr> = Discovery::new().unwrap().start(None, Some(3)).unwrap();
     /// ```
     pub fn start(&self, timeout: Option<u32>, device_count: Option<usize>) -> Result<Vec<IpAddr>> {
-        let timeout = match timeout {
-            Some(value) => { value }
-            None => 5
-        };
-        let device_count = match device_count {
-            Some(value) => { value }
-            None => std::u32::MAX as usize
-        };
+        let timeout = timeout.unwrap_or(5);
+        let device_count = device_count.unwrap_or(std::u32::MAX as usize);
 
         let time = Instant::now();
 
@@ -138,7 +132,7 @@ ST: urn:schemas-upnp-org:device:ZonePlayer:1"#;
 
             // Skip from_utf8_lossy
             // Due to the usual small size of `devices`, this is faster than decoding a potentially large response
-            if devices.contains(&_addr.ip()) || data.is_empty() {
+            if data.is_empty() || devices.contains(&_addr.ip()) {
                 println!("{:?}", &_addr.ip());
                 continue
             }
