@@ -131,13 +131,7 @@ ST: urn:schemas-upnp-org:device:ZonePlayer:1"#;
                 Err(_) => continue
             };
 
-            // Skip from_utf8_lossy
-            // Due to the usual small size of `devices`, this is faster than decoding a potentially large response
-            if data.is_empty() || devices.contains(&_addr.ip()) {
-                continue
-            }
-
-            let needle = br"Sonos";
+            let needle: &[u8] = br"Sonos";
             if data.windows(needle.len()).position(|window| window == needle).is_some() {
                 devices.push(addr.ip())
             }
