@@ -132,7 +132,6 @@ ST: urn:schemas-upnp-org:device:ZonePlayer:1"#;
             // Skip from_utf8_lossy
             // Due to the usual small size of `devices`, this is faster than decoding a potentially large response
             if data.is_empty() || devices.contains(&_addr.ip()) {
-                println!("{:?}", &_addr.ip());
                 continue
             }
 
