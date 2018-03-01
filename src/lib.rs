@@ -110,22 +110,24 @@ ST: urn:schemas-upnp-org:device:ZonePlayer:1"#;
         let time = Instant::now();
 
         self.send_search()?;
+
         let mut devices: Vec<IpAddr> = Vec::new();
         while time.elapsed().as_secs() < u64::from(timeout) && devices.len() < device_count {
             let socket = Arc::clone(&self.socket);
             let (sender, receiver) = mpsc::channel();
             thread::spawn(move ||
                 {
-                    if let Ok((__addr, _data)) = socket.recvfrom(1024, 0) {
+                    if let Ok((_addr, _data)) = socket.recvfrom(1024, 0) {
                         // TODO: Add logging, fail on multiple send errors?
-                        if sender.send((__addr, _data)).is_ok() {}
+                        sender.send((_addr, _data)).is_ok();
                     }
                 }
             );
 
             // TODO: Add logging, change
-            let (_addr, data) = match receiver.recv_timeout(std::time::Duration::new(0, 500_000_000)) {
-                Ok((_addr, data)) => (_addr, data),
+            let timeout = std::time::Duration::new(0, 500_000_000);
+            let (addr, data): (SocketAddr, Box<[u8]>) = match receiver.recv_timeout(timeout) {
+                Ok((addr, data)) => (addr, data),
                 Err(_) => continue
             };
 
@@ -137,7 +139,7 @@ ST: urn:schemas-upnp-org:device:ZonePlayer:1"#;
 
             let needle = br"Sonos";
             if data.windows(needle.len()).position(|window| window == needle).is_some() {
-                devices.push(_addr.ip())
+                devices.push(addr.ip())
             }
         }
 
