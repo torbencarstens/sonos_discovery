@@ -135,8 +135,8 @@ ST: urn:schemas-upnp-org:device:ZonePlayer:1"#;
                 continue
             }
 
-            let data = String::from_utf8_lossy(&data);
-            if data.contains("Sonos") {
+            let needle = br"Sonos";
+            if data.windows(needle.len()).position(|window| window == needle).is_some() {
                 devices.push(_addr.ip())
             }
         }
