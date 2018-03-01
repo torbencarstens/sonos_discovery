@@ -34,10 +34,9 @@ impl Discover {
     /// let discovery: Discovery = Discovery::new().unwrap();
     /// ```
     pub fn new() -> Result<Self> {
-        let multicast_address = match SocketAddr::from_str("239.255.255.250:1900") {
-            Ok(address) => address,
-            Err(_) => return Err(Error::new(ErrorKind::InvalidData, "Couldn't parse socket address"))
-        };
+        let multicast_address = SocketAddr::from_str("239.255.255.250:1900")
+            .map_err(|_|
+                Error::new(ErrorKind::InvalidData, "Couldn't parse socket address"))?;
 
         Discover::with_address(multicast_address)
     }
