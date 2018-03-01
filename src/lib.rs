@@ -144,12 +144,3 @@ ST: urn:schemas-upnp-org:device:ZonePlayer:1"#;
         Ok(devices)
     }
 }
-
-/// Drop internal socket on going out of scope
-impl Drop for Discover {
-    fn drop(&mut self) {
-        // Socket closes on drop automatically, better safe than sorry
-        // Log failure for debugging
-        let _ = self.socket.close();
-    }
-}
