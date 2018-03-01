@@ -132,9 +132,10 @@ ST: urn:schemas-upnp-org:device:ZonePlayer:1"#;
             };
 
             let needle: &[u8] = br"Sonos";
-            if data.windows(needle.len()).position(|window| window == needle).is_some() {
-                devices.push(addr.ip())
-            }
+            data.windows(needle.len()).position(|window| window == needle)
+                .map(|_|
+                    devices.push(addr.ip())
+                );
         }
 
         Ok(devices)
