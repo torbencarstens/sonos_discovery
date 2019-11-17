@@ -17,4 +17,4 @@ path = "src/main.rs"
 doc = false
 
 [dependencies]
-socket = "0.0.7"
+socket = { version = "0.0.7", git = "https://github.com/teisenbe/rust-socket", branch = "remove_dependency" }
