@@ -1,6 +1,6 @@
 [package]
 name = "sonos_discovery"
-version = "0.0.1"
+version = "0.0.2"
 authors = ["Chabare <chabare95@gmail.com>"]
 description = "Discover sonos devices via ssdp (UPnP discovery)"
 repository = "https://github.com/Chabare/sonos_discovery"
